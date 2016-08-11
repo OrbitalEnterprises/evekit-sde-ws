@@ -33,6 +33,7 @@ public class SDEApplication extends Application {
     resources.add(CrtWS.class);
     resources.add(DgmWS.class);
     resources.add(EveWS.class);
+    resources.add(IndWS.class);
     resources.add(InvWS.class);
     resources.add(MapWS.class);
     resources.add(PltWS.class);
