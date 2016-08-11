@@ -14,7 +14,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import enterprises.orbital.evekit.sde.AttributeSelector;
-import enterprises.orbital.evekit.sde.inv.InvBlueprintType;
 import enterprises.orbital.evekit.sde.inv.InvCategory;
 import enterprises.orbital.evekit.sde.inv.InvContrabandType;
 import enterprises.orbital.evekit.sde.inv.InvControlTowerResource;
@@ -26,6 +25,7 @@ import enterprises.orbital.evekit.sde.inv.InvMetaGroup;
 import enterprises.orbital.evekit.sde.inv.InvMetaType;
 import enterprises.orbital.evekit.sde.inv.InvName;
 import enterprises.orbital.evekit.sde.inv.InvPosition;
+import enterprises.orbital.evekit.sde.inv.InvTrait;
 import enterprises.orbital.evekit.sde.inv.InvType;
 import enterprises.orbital.evekit.sde.inv.InvTypeMaterial;
 import enterprises.orbital.evekit.sde.inv.InvTypeReaction;
@@ -50,150 +50,6 @@ import io.swagger.annotations.ApiResponses;
     produces = "application/json",
     consumes = "application/json")
 public class InvWS {
-
-  @Path("/blueprint_type")
-  @GET
-  @ApiOperation(
-      value = "Get blueprint types")
-  @ApiResponses(
-      value = {
-          @ApiResponse(
-              code = 200,
-              message = "list of requested blueprint types",
-              response = InvBlueprintType.class,
-              responseContainer = "array"),
-          @ApiResponse(
-              code = 400,
-              message = "invalid attribute selector",
-              response = ServiceError.class),
-          @ApiResponse(
-              code = 500,
-              message = "internal service error",
-              response = ServiceError.class),
-      })
-  public Response getBlueprintTypes(
-                                    @Context HttpServletRequest request,
-                                    @QueryParam("contid") @DefaultValue("-1") @ApiParam(
-                                        name = "contid",
-                                        required = false,
-                                        defaultValue = "-1",
-                                        value = "Continuation ID for paged results") int contid,
-                                    @QueryParam("maxresults") @DefaultValue("1000") @ApiParam(
-                                        name = "maxresults",
-                                        required = false,
-                                        defaultValue = "1000",
-                                        value = "Maximum number of results to retrieve") int maxresults,
-                                    @QueryParam("blueprintTypeID") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "blueprintTypeID",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Blueprint type ID selector") AttributeSelector blueprintTypeID,
-                                    @QueryParam("duplicatingTime") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "duplicatingTime",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Duplicating time selector") AttributeSelector duplicatingTime,
-                                    @QueryParam("inventionTime") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "inventionTime",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Invention time selector") AttributeSelector inventionTime,
-                                    @QueryParam("materialModifier") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "materialModifier",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Material modifier selector") AttributeSelector materialModifier,
-                                    @QueryParam("maxProductionLimit") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "maxProductionLimit",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Max production limit selector") AttributeSelector maxProductionLimit,
-                                    @QueryParam("parentBlueprintTypeID") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "parentBlueprintTypeID",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Parent blueprint type ID selector") AttributeSelector parentBlueprintTypeID,
-                                    @QueryParam("productionTime") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "productionTime",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Production time selector") AttributeSelector productionTime,
-                                    @QueryParam("productivityModifier") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "productivityModifier",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Productivity modifier selector") AttributeSelector productivityModifier,
-                                    @QueryParam("productTypeID") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "productTypeID",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Product type ID selector") AttributeSelector productTypeID,
-                                    @QueryParam("researchCopyTime") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "researchCopyTime",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Research copy time selector") AttributeSelector researchCopyTime,
-                                    @QueryParam("researchMaterialTime") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "researchMaterialTime",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Research material time selector") AttributeSelector researchMaterialTime,
-                                    @QueryParam("researchProductivityTime") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "researchProductivityTime",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Research productivity time selector") AttributeSelector researchProductivityTime,
-                                    @QueryParam("researchTechTime") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "researchTechTime",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Research tech time selector") AttributeSelector researchTechTime,
-                                    @QueryParam("reverseEngineeringTime") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "reverseEngineeringTime",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Reverse engineering time selector") AttributeSelector reverseEngineeringTime,
-                                    @QueryParam("techLevel") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "techLevel",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Tech level selector") AttributeSelector techLevel,
-                                    @QueryParam("wasteFactor") @DefaultValue(
-                                        value = "{ any: true }") @ApiParam(
-                                            name = "wasteFactor",
-                                            required = false,
-                                            defaultValue = "{ any: true }",
-                                            value = "Waster factor selector") AttributeSelector wasteFactor) {
-    ServiceUtil.sanitizeAttributeSelector(blueprintTypeID, duplicatingTime, inventionTime, materialModifier, maxProductionLimit, parentBlueprintTypeID,
-                                          productionTime, productivityModifier, productTypeID, researchCopyTime, researchMaterialTime, researchProductivityTime,
-                                          researchTechTime, reverseEngineeringTime, techLevel, wasteFactor);
-    maxresults = Math.min(1000, maxresults);
-    try {
-      List<InvBlueprintType> result = InvBlueprintType.access(contid, maxresults, blueprintTypeID, duplicatingTime, inventionTime, materialModifier,
-                                                              maxProductionLimit, parentBlueprintTypeID, productionTime, productivityModifier, productTypeID,
-                                                              researchCopyTime, researchMaterialTime, researchProductivityTime, researchTechTime,
-                                                              reverseEngineeringTime, techLevel, wasteFactor);
-      return ServiceUtil.finish(result, request);
-    } catch (NumberFormatException e) {
-      ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
-      return Response.status(Status.BAD_REQUEST).entity(errMsg).build();
-    }
-  }
 
   @Path("/category")
   @GET
@@ -239,12 +95,6 @@ public class InvWS {
                                         required = false,
                                         defaultValue = "{ any: true }",
                                         value = "Category name selector") AttributeSelector categoryName,
-                                @QueryParam("description") @DefaultValue(
-                                    value = "{ any: true }") @ApiParam(
-                                        name = "description",
-                                        required = false,
-                                        defaultValue = "{ any: true }",
-                                        value = "Description text selector") AttributeSelector description,
                                 @QueryParam("iconID") @DefaultValue(
                                     value = "{ any: true }") @ApiParam(
                                         name = "iconID",
@@ -257,10 +107,10 @@ public class InvWS {
                                         required = false,
                                         defaultValue = "{ any: true }",
                                         value = "Published flag selector") AttributeSelector published) {
-    ServiceUtil.sanitizeAttributeSelector(categoryID, categoryName, description, iconID, published);
+    ServiceUtil.sanitizeAttributeSelector(categoryID, categoryName, iconID, published);
     maxresults = Math.min(1000, maxresults);
     try {
-      List<InvCategory> result = InvCategory.access(contid, maxresults, categoryID, categoryName, description, iconID, published);
+      List<InvCategory> result = InvCategory.access(contid, maxresults, categoryID, categoryName, iconID, published);
       return ServiceUtil.finish(result, request);
     } catch (NumberFormatException e) {
       ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
@@ -588,18 +438,6 @@ public class InvWS {
                                     required = false,
                                     defaultValue = "{ any: true }",
                                     value = "Group ID selector") AttributeSelector groupID,
-                            @QueryParam("allowManufacture") @DefaultValue(
-                                value = "{ any: true }") @ApiParam(
-                                    name = "allowManufacture",
-                                    required = false,
-                                    defaultValue = "{ any: true }",
-                                    value = "Allow manufacture flag selector") AttributeSelector allowManufacture,
-                            @QueryParam("allowRecycler") @DefaultValue(
-                                value = "{ any: true }") @ApiParam(
-                                    name = "allowRecycler",
-                                    required = false,
-                                    defaultValue = "{ any: true }",
-                                    value = "Allow recycler flag selector") AttributeSelector allowRecycler,
                             @QueryParam("anchorable") @DefaultValue(
                                 value = "{ any: true }") @ApiParam(
                                     name = "anchorable",
@@ -618,12 +456,6 @@ public class InvWS {
                                     required = false,
                                     defaultValue = "{ any: true }",
                                     value = "Category ID selector") AttributeSelector categoryID,
-                            @QueryParam("description") @DefaultValue(
-                                value = "{ any: true }") @ApiParam(
-                                    name = "description",
-                                    required = false,
-                                    defaultValue = "{ any: true }",
-                                    value = "Description text selector") AttributeSelector description,
                             @QueryParam("fittableNonSingleton") @DefaultValue(
                                 value = "{ any: true }") @ApiParam(
                                     name = "fittableNonSingleton",
@@ -654,12 +486,11 @@ public class InvWS {
                                     required = false,
                                     defaultValue = "{ any: true }",
                                     value = "Use base price selector") AttributeSelector useBasePrice) {
-    ServiceUtil.sanitizeAttributeSelector(groupID, allowManufacture, allowRecycler, anchorable, anchored, categoryID, description, fittableNonSingleton,
-                                          groupName, iconID, published, useBasePrice);
+    ServiceUtil.sanitizeAttributeSelector(groupID, anchorable, anchored, categoryID, fittableNonSingleton, groupName, iconID, published, useBasePrice);
     maxresults = Math.min(1000, maxresults);
     try {
-      List<InvGroup> result = InvGroup.access(contid, maxresults, groupID, allowManufacture, allowRecycler, anchorable, anchored, categoryID, description,
-                                              fittableNonSingleton, groupName, iconID, published, useBasePrice);
+      List<InvGroup> result = InvGroup.access(contid, maxresults, groupID, anchorable, anchored, categoryID, fittableNonSingleton, groupName, iconID, published,
+                                              useBasePrice);
       return ServiceUtil.finish(result, request);
     } catch (NumberFormatException e) {
       ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
@@ -1014,6 +845,85 @@ public class InvWS {
     }
   }
 
+  @Path("/trait")
+  @GET
+  @ApiOperation(
+      value = "Get traits")
+  @ApiResponses(
+      value = {
+          @ApiResponse(
+              code = 200,
+              message = "list of requested traits",
+              response = InvTrait.class,
+              responseContainer = "array"),
+          @ApiResponse(
+              code = 400,
+              message = "invalid attribute selector",
+              response = ServiceError.class),
+          @ApiResponse(
+              code = 500,
+              message = "internal service error",
+              response = ServiceError.class),
+      })
+  public Response getTraits(
+                            @Context HttpServletRequest request,
+                            @QueryParam("contid") @DefaultValue("-1") @ApiParam(
+                                name = "contid",
+                                required = false,
+                                defaultValue = "-1",
+                                value = "Continuation ID for paged results") int contid,
+                            @QueryParam("maxresults") @DefaultValue("1000") @ApiParam(
+                                name = "maxresults",
+                                required = false,
+                                defaultValue = "1000",
+                                value = "Maximum number of results to retrieve") int maxresults,
+                            @QueryParam("traitID") @DefaultValue(
+                                value = "{ any: true }") @ApiParam(
+                                    name = "traitID",
+                                    required = false,
+                                    defaultValue = "{ any: true }",
+                                    value = "Trait ID selector") AttributeSelector traitID,
+                            @QueryParam("typeID") @DefaultValue(
+                                value = "{ any: true }") @ApiParam(
+                                    name = "typeID",
+                                    required = false,
+                                    defaultValue = "{ any: true }",
+                                    value = "Trait ID selector") AttributeSelector typeID,
+                            @QueryParam("skillID") @DefaultValue(
+                                value = "{ any: true }") @ApiParam(
+                                    name = "skillID",
+                                    required = false,
+                                    defaultValue = "{ any: true }",
+                                    value = "Skill ID selector") AttributeSelector skillID,
+                            @QueryParam("bonus") @DefaultValue(
+                                value = "{ any: true }") @ApiParam(
+                                    name = "bonus",
+                                    required = false,
+                                    defaultValue = "{ any: true }",
+                                    value = "Bonus selector") AttributeSelector bonus,
+                            @QueryParam("bonusText") @DefaultValue(
+                                value = "{ any: true }") @ApiParam(
+                                    name = "bonusText",
+                                    required = false,
+                                    defaultValue = "{ any: true }",
+                                    value = "Bonus text selector") AttributeSelector bonusText,
+                            @QueryParam("unitID") @DefaultValue(
+                                value = "{ any: true }") @ApiParam(
+                                    name = "unitID",
+                                    required = false,
+                                    defaultValue = "{ any: true }",
+                                    value = "Unit ID selector") AttributeSelector unitID) {
+    ServiceUtil.sanitizeAttributeSelector(traitID, typeID, skillID, bonus, bonusText, unitID);
+    maxresults = Math.min(1000, maxresults);
+    try {
+      List<InvTrait> result = InvTrait.access(contid, maxresults, traitID, typeID, skillID, bonus, bonusText, unitID);
+      return ServiceUtil.finish(result, request);
+    } catch (NumberFormatException e) {
+      ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
+      return Response.status(Status.BAD_REQUEST).entity(errMsg).build();
+    }
+  }
+
   @Path("/type")
   @GET
   @ApiOperation(
@@ -1076,12 +986,6 @@ public class InvWS {
                                    required = false,
                                    defaultValue = "{ any: true }",
                                    value = "Description text selector") AttributeSelector description,
-                           @QueryParam("factionID") @DefaultValue(
-                               value = "{ any: true }") @ApiParam(
-                                   name = "factionID",
-                                   required = false,
-                                   defaultValue = "{ any: true }",
-                                   value = "Faction ID selector") AttributeSelector factionID,
                            @QueryParam("graphicID") @DefaultValue(
                                value = "{ any: true }") @ApiParam(
                                    name = "graphicID",
@@ -1154,12 +1058,12 @@ public class InvWS {
                                    required = false,
                                    defaultValue = "{ any: true }",
                                    value = "Volume selector") AttributeSelector volume) {
-    ServiceUtil.sanitizeAttributeSelector(typeID, basePrice, capacity, chanceOfDuplicating, description, factionID, graphicID, groupID, iconID, marketGroupID,
-                                          mass, portionSize, published, raceID, radius, soundID, typeName, volume);
+    ServiceUtil.sanitizeAttributeSelector(typeID, basePrice, capacity, chanceOfDuplicating, description, graphicID, groupID, iconID, marketGroupID, mass,
+                                          portionSize, published, raceID, radius, soundID, typeName, volume);
     maxresults = Math.min(1000, maxresults);
     try {
-      List<InvType> result = InvType.access(contid, maxresults, typeID, basePrice, capacity, chanceOfDuplicating, description, factionID, graphicID, groupID,
-                                            iconID, marketGroupID, mass, portionSize, published, raceID, radius, soundID, typeName, volume);
+      List<InvType> result = InvType.access(contid, maxresults, typeID, basePrice, capacity, chanceOfDuplicating, description, graphicID, groupID, iconID,
+                                            marketGroupID, mass, portionSize, published, raceID, radius, soundID, typeName, volume);
       return ServiceUtil.finish(result, request);
     } catch (NumberFormatException e) {
       ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");

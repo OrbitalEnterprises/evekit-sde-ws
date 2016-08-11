@@ -20,7 +20,6 @@ import enterprises.orbital.evekit.sde.ram.RamAssemblyLineType;
 import enterprises.orbital.evekit.sde.ram.RamAssemblyLineTypeDetailPerCategory;
 import enterprises.orbital.evekit.sde.ram.RamAssemblyLineTypeDetailPerGroup;
 import enterprises.orbital.evekit.sde.ram.RamInstallationTypeContent;
-import enterprises.orbital.evekit.sde.ram.RamTypeRequirement;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -503,110 +502,6 @@ public class RamWS {
     maxresults = Math.min(1000, maxresults);
     try {
       List<RamInstallationTypeContent> result = RamInstallationTypeContent.access(contid, maxresults, installationTypeID, assemblyLineTypeID, quantity);
-      return ServiceUtil.finish(result, request);
-    } catch (NumberFormatException e) {
-      ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
-      return Response.status(Status.BAD_REQUEST).entity(errMsg).build();
-    }
-  }
-
-  @Path("/type_requirement")
-  @GET
-  @ApiOperation(
-      value = "Get type requirements")
-  @ApiResponses(
-      value = {
-          @ApiResponse(
-              code = 200,
-              message = "list of requested type requirements",
-              response = RamTypeRequirement.class,
-              responseContainer = "array"),
-          @ApiResponse(
-              code = 400,
-              message = "invalid attribute selector",
-              response = ServiceError.class),
-          @ApiResponse(
-              code = 500,
-              message = "internal service error",
-              response = ServiceError.class),
-      })
-  public Response getTypeRequirements(
-                                      @Context HttpServletRequest request,
-                                      @QueryParam("contid") @DefaultValue("-1") @ApiParam(
-                                          name = "contid",
-                                          required = false,
-                                          defaultValue = "-1",
-                                          value = "Continuation ID for paged results") int contid,
-                                      @QueryParam("maxresults") @DefaultValue("1000") @ApiParam(
-                                          name = "maxresults",
-                                          required = false,
-                                          defaultValue = "1000",
-                                          value = "Maximum number of results to retrieve") int maxresults,
-                                      @QueryParam("typeID") @DefaultValue(
-                                          value = "{ any: true }") @ApiParam(
-                                              name = "typeID",
-                                              required = false,
-                                              defaultValue = "{ any: true }",
-                                              value = "Type ID selector") AttributeSelector typeID,
-                                      @QueryParam("activityID") @DefaultValue(
-                                          value = "{ any: true }") @ApiParam(
-                                              name = "activityID",
-                                              required = false,
-                                              defaultValue = "{ any: true }",
-                                              value = "Activity ID selector") AttributeSelector activityID,
-                                      @QueryParam("requiredTypeID") @DefaultValue(
-                                          value = "{ any: true }") @ApiParam(
-                                              name = "requiredTypeID",
-                                              required = false,
-                                              defaultValue = "{ any: true }",
-                                              value = "Required type ID selector") AttributeSelector requiredTypeID,
-                                      @QueryParam("consume") @DefaultValue(
-                                          value = "{ any: true }") @ApiParam(
-                                              name = "consume",
-                                              required = false,
-                                              defaultValue = "{ any: true }",
-                                              value = "Consume selector") AttributeSelector consume,
-                                      @QueryParam("damagePerJob") @DefaultValue(
-                                          value = "{ any: true }") @ApiParam(
-                                              name = "damagePerJob",
-                                              required = false,
-                                              defaultValue = "{ any: true }",
-                                              value = "Damage per job selector") AttributeSelector damagePerJob,
-                                      @QueryParam("level") @DefaultValue(
-                                          value = "{ any: true }") @ApiParam(
-                                              name = "level",
-                                              required = false,
-                                              defaultValue = "{ any: true }",
-                                              value = "Level selector") AttributeSelector level,
-                                      @QueryParam("probability") @DefaultValue(
-                                          value = "{ any: true }") @ApiParam(
-                                              name = "probability",
-                                              required = false,
-                                              defaultValue = "{ any: true }",
-                                              value = "Probability selector") AttributeSelector probability,
-                                      @QueryParam("quantity") @DefaultValue(
-                                          value = "{ any: true }") @ApiParam(
-                                              name = "quantity",
-                                              required = false,
-                                              defaultValue = "{ any: true }",
-                                              value = "Quantity selector") AttributeSelector quantity,
-                                      @QueryParam("raceID") @DefaultValue(
-                                          value = "{ any: true }") @ApiParam(
-                                              name = "raceID",
-                                              required = false,
-                                              defaultValue = "{ any: true }",
-                                              value = "Race ID selector") AttributeSelector raceID,
-                                      @QueryParam("recycle") @DefaultValue(
-                                          value = "{ any: true }") @ApiParam(
-                                              name = "recycle",
-                                              required = false,
-                                              defaultValue = "{ any: true }",
-                                              value = "Recycle selector") AttributeSelector recycle) {
-    ServiceUtil.sanitizeAttributeSelector(typeID, activityID, requiredTypeID, consume, damagePerJob, level, probability, quantity, raceID, recycle);
-    maxresults = Math.min(1000, maxresults);
-    try {
-      List<RamTypeRequirement> result = RamTypeRequirement.access(contid, maxresults, typeID, activityID, requiredTypeID, consume, damagePerJob, level,
-                                                                  probability, quantity, raceID, recycle);
       return ServiceUtil.finish(result, request);
     } catch (NumberFormatException e) {
       ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");

@@ -17,7 +17,6 @@ import enterprises.orbital.evekit.sde.AttributeSelector;
 import enterprises.orbital.evekit.sde.trn.TrnTranslation;
 import enterprises.orbital.evekit.sde.trn.TrnTranslationColumn;
 import enterprises.orbital.evekit.sde.trn.TrnTranslationLanguage;
-import enterprises.orbital.evekit.sde.trn.TrnTranslationTable;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -233,79 +232,6 @@ public class TrnWS {
     maxresults = Math.min(1000, maxresults);
     try {
       List<TrnTranslationLanguage> result = TrnTranslationLanguage.access(contid, maxresults, numericLanguageID, languageID, languageName);
-      return ServiceUtil.finish(result, request);
-    } catch (NumberFormatException e) {
-      ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
-      return Response.status(Status.BAD_REQUEST).entity(errMsg).build();
-    }
-  }
-
-  @Path("/table")
-  @GET
-  @ApiOperation(
-      value = "Get tables")
-  @ApiResponses(
-      value = {
-          @ApiResponse(
-              code = 200,
-              message = "list of requested tables",
-              response = TrnTranslationTable.class,
-              responseContainer = "array"),
-          @ApiResponse(
-              code = 400,
-              message = "invalid attribute selector",
-              response = ServiceError.class),
-          @ApiResponse(
-              code = 500,
-              message = "internal service error",
-              response = ServiceError.class),
-      })
-  public Response getTables(
-                            @Context HttpServletRequest request,
-                            @QueryParam("contid") @DefaultValue("-1") @ApiParam(
-                                name = "contid",
-                                required = false,
-                                defaultValue = "-1",
-                                value = "Continuation ID for paged results") int contid,
-                            @QueryParam("maxresults") @DefaultValue("1000") @ApiParam(
-                                name = "maxresults",
-                                required = false,
-                                defaultValue = "1000",
-                                value = "Maximum number of results to retrieve") int maxresults,
-                            @QueryParam("sourceTable") @DefaultValue(
-                                value = "{ any: true }") @ApiParam(
-                                    name = "sourceTable",
-                                    required = false,
-                                    defaultValue = "{ any: true }",
-                                    value = "Source table selector") AttributeSelector sourceTable,
-                            @QueryParam("translatedKey") @DefaultValue(
-                                value = "{ any: true }") @ApiParam(
-                                    name = "translatedKey",
-                                    required = false,
-                                    defaultValue = "{ any: true }",
-                                    value = "Translated key selector") AttributeSelector translatedKey,
-                            @QueryParam("destinationTable") @DefaultValue(
-                                value = "{ any: true }") @ApiParam(
-                                    name = "destinationTable",
-                                    required = false,
-                                    defaultValue = "{ any: true }",
-                                    value = "Destination table selector") AttributeSelector destinationTable,
-                            @QueryParam("tcGroupID") @DefaultValue(
-                                value = "{ any: true }") @ApiParam(
-                                    name = "tcGroupID",
-                                    required = false,
-                                    defaultValue = "{ any: true }",
-                                    value = "Translation column group ID selector") AttributeSelector tcGroupID,
-                            @QueryParam("tcID") @DefaultValue(
-                                value = "{ any: true }") @ApiParam(
-                                    name = "tcID",
-                                    required = false,
-                                    defaultValue = "{ any: true }",
-                                    value = "Translation column ID selector") AttributeSelector tcID) {
-    ServiceUtil.sanitizeAttributeSelector(sourceTable, translatedKey, destinationTable, tcGroupID, tcID);
-    maxresults = Math.min(1000, maxresults);
-    try {
-      List<TrnTranslationTable> result = TrnTranslationTable.access(contid, maxresults, sourceTable, translatedKey, destinationTable, tcGroupID, tcID);
       return ServiceUtil.finish(result, request);
     } catch (NumberFormatException e) {
       ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");

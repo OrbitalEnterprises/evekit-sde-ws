@@ -1,6 +1,6 @@
 # EVE Online Static Data Export (SDE) Web Service
 
-This module provides a servlet which exposes a conversion of the EVE Online Static Data Export (SDE).  We use our own [SDE library](https://github.com/OrbitalEnterprises/evekit-sde) to provide access to a database version of the SDE converted from the raw YAML SDE export using our own [SDE Converter](https://github.com/OrbitalEnterprises/evekit-sde-converter) tool.  The web service we expose is a REST API with [Swagger](http://swagger.io) annotations, which in turn makes it trivial to generate documentation and experiment with the API, as well as generate client libraries in various languages.
+This module provides a servlet which exposes a conversion of the EVE Online Static Data Export (SDE).  We use our own [SDE library](https://github.com/OrbitalEnterprises/evekit-sde) to provide access to a database version of the SDE as provided on [Fuzzy Steve's site](https://www.fuzzwork.co.uk/dump/).  The web service we expose is a REST API with [Swagger](http://swagger.io) annotations, which in turn makes it trivial to generate documentation and experiment with the API, as well as generate client libraries in various languages.
 
 We maintain a [public instance](https://evekit-sde.orbital.enterprises/) of the web service which usually exposes the last two SDE releases.  To track changes between releases, we create a named release branch of this module corresponding to each SDE release.  The master branch of this module normally corresponds to the latest SDE release.  Each release of the web service corresponds to a named release branch of the [SDE library](https://github.com/OrbitalEnterprises/evekit-sde) which you'll also need in order to use this module.
 
@@ -8,7 +8,7 @@ The rest of this guide describes how to configure, build and deploy your own ins
 
 ## Database Setup
 
-The service expects you've already imported the SDE into your favorite database vendor.  For the public site, we use MySQL, but for the code below you can use any JDBC and Hibernate friendly vendor.  The [SDE Converter](https://github.com/OrbitalEnterprises/evekit-sde-converter) project has instructions for converting the YAML SDE export to MySQL, sqlite, h2 and CSV files.  The converter page has links to conversions we've done using our tool.
+The service expects you've already imported the SDE into your favorite database vendor.  For the public site, we use MySQL, but for the code below you can use any JDBC and Hibernate friendly vendor.
 
 You'll normally want to clone the branch of this module corresponding to the release you plan to use.  If you're instantiating the service for an SDE release we don't support, then you'll need to determine whether there are any schema changes that aren't reflected in the code.
 

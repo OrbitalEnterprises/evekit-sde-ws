@@ -19,7 +19,6 @@ import enterprises.orbital.evekit.sde.map.MapConstellation;
 import enterprises.orbital.evekit.sde.map.MapConstellationJump;
 import enterprises.orbital.evekit.sde.map.MapDenormalize;
 import enterprises.orbital.evekit.sde.map.MapJump;
-import enterprises.orbital.evekit.sde.map.MapLandmark;
 import enterprises.orbital.evekit.sde.map.MapLocationScene;
 import enterprises.orbital.evekit.sde.map.MapLocationWormholeClass;
 import enterprises.orbital.evekit.sde.map.MapRegion;
@@ -582,119 +581,16 @@ public class MapWS {
                                    required = false,
                                    defaultValue = "{ any: true }",
                                    value = "Stargate ID selector") AttributeSelector stargateID,
-                           @QueryParam("celestialID") @DefaultValue(
+                           @QueryParam("destinationID") @DefaultValue(
                                value = "{ any: true }") @ApiParam(
-                                   name = "celestialID",
+                                   name = "destinationID",
                                    required = false,
                                    defaultValue = "{ any: true }",
-                                   value = "Celestial ID selector") AttributeSelector celestialID) {
-    ServiceUtil.sanitizeAttributeSelector(stargateID, celestialID);
+                                   value = "Destination ID selector") AttributeSelector destinationID) {
+    ServiceUtil.sanitizeAttributeSelector(stargateID, destinationID);
     maxresults = Math.min(1000, maxresults);
     try {
-      List<MapJump> result = MapJump.access(contid, maxresults, stargateID, celestialID);
-      return ServiceUtil.finish(result, request);
-    } catch (NumberFormatException e) {
-      ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
-      return Response.status(Status.BAD_REQUEST).entity(errMsg).build();
-    }
-  }
-
-  @Path("/landmark")
-  @GET
-  @ApiOperation(
-      value = "Get landmarks")
-  @ApiResponses(
-      value = {
-          @ApiResponse(
-              code = 200,
-              message = "list of requested landmarks",
-              response = MapLandmark.class,
-              responseContainer = "array"),
-          @ApiResponse(
-              code = 400,
-              message = "invalid attribute selector",
-              response = ServiceError.class),
-          @ApiResponse(
-              code = 500,
-              message = "internal service error",
-              response = ServiceError.class),
-      })
-  public Response getLandmarks(
-                               @Context HttpServletRequest request,
-                               @QueryParam("contid") @DefaultValue("-1") @ApiParam(
-                                   name = "contid",
-                                   required = false,
-                                   defaultValue = "-1",
-                                   value = "Continuation ID for paged results") int contid,
-                               @QueryParam("maxresults") @DefaultValue("1000") @ApiParam(
-                                   name = "maxresults",
-                                   required = false,
-                                   defaultValue = "1000",
-                                   value = "Maximum number of results to retrieve") int maxresults,
-                               @QueryParam("landmarkID") @DefaultValue(
-                                   value = "{ any: true }") @ApiParam(
-                                       name = "landmarkID",
-                                       required = false,
-                                       defaultValue = "{ any: true }",
-                                       value = "Landmark ID selector") AttributeSelector landmarkID,
-                               @QueryParam("description") @DefaultValue(
-                                   value = "{ any: true }") @ApiParam(
-                                       name = "description",
-                                       required = false,
-                                       defaultValue = "{ any: true }",
-                                       value = "Description text selector") AttributeSelector description,
-                               @QueryParam("iconID") @DefaultValue(
-                                   value = "{ any: true }") @ApiParam(
-                                       name = "iconID",
-                                       required = false,
-                                       defaultValue = "{ any: true }",
-                                       value = "Icon ID selector") AttributeSelector iconID,
-                               @QueryParam("importance") @DefaultValue(
-                                   value = "{ any: true }") @ApiParam(
-                                       name = "importance",
-                                       required = false,
-                                       defaultValue = "{ any: true }",
-                                       value = "Importance selector") AttributeSelector importance,
-                               @QueryParam("landmarkName") @DefaultValue(
-                                   value = "{ any: true }") @ApiParam(
-                                       name = "landmarkName",
-                                       required = false,
-                                       defaultValue = "{ any: true }",
-                                       value = "Landmark name selector") AttributeSelector landmarkName,
-                               @QueryParam("locationID") @DefaultValue(
-                                   value = "{ any: true }") @ApiParam(
-                                       name = "locationID",
-                                       required = false,
-                                       defaultValue = "{ any: true }",
-                                       value = "Location ID selector") AttributeSelector locationID,
-                               @QueryParam("radius") @DefaultValue(
-                                   value = "{ any: true }") @ApiParam(
-                                       name = "radius",
-                                       required = false,
-                                       defaultValue = "{ any: true }",
-                                       value = "Radius selector") AttributeSelector radius,
-                               @QueryParam("x") @DefaultValue(
-                                   value = "{ any: true }") @ApiParam(
-                                       name = "x",
-                                       required = false,
-                                       defaultValue = "{ any: true }",
-                                       value = "X selector") AttributeSelector x,
-                               @QueryParam("y") @DefaultValue(
-                                   value = "{ any: true }") @ApiParam(
-                                       name = "y",
-                                       required = false,
-                                       defaultValue = "{ any: true }",
-                                       value = "Y selector") AttributeSelector y,
-                               @QueryParam("z") @DefaultValue(
-                                   value = "{ any: true }") @ApiParam(
-                                       name = "z",
-                                       required = false,
-                                       defaultValue = "{ any: true }",
-                                       value = "Z selector") AttributeSelector z) {
-    ServiceUtil.sanitizeAttributeSelector(landmarkID, description, iconID, importance, landmarkName, locationID, radius, x, y, z);
-    maxresults = Math.min(1000, maxresults);
-    try {
-      List<MapLandmark> result = MapLandmark.access(contid, maxresults, landmarkID, description, iconID, importance, landmarkName, locationID, radius, x, y, z);
+      List<MapJump> result = MapJump.access(contid, maxresults, stargateID, destinationID);
       return ServiceUtil.finish(result, request);
     } catch (NumberFormatException e) {
       ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");

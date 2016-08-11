@@ -15,9 +15,8 @@ import javax.ws.rs.core.Response.Status;
 
 import enterprises.orbital.evekit.sde.AttributeSelector;
 import enterprises.orbital.evekit.sde.crt.CrtCertificate;
-import enterprises.orbital.evekit.sde.crt.CrtClass;
-import enterprises.orbital.evekit.sde.crt.CrtRecommendation;
-import enterprises.orbital.evekit.sde.crt.CrtRelationship;
+import enterprises.orbital.evekit.sde.crt.CrtMastery;
+import enterprises.orbital.evekit.sde.crt.CrtSkill;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -71,52 +70,34 @@ public class CrtWS {
                                       required = false,
                                       defaultValue = "1000",
                                       value = "Maximum number of results to retrieve") int maxresults,
-                                  @QueryParam("certificateID") @DefaultValue(
+                                  @QueryParam("certID") @DefaultValue(
                                       value = "{ any: true }") @ApiParam(
-                                          name = "certificateID",
+                                          name = "certID",
                                           required = false,
                                           defaultValue = "{ any: true }",
-                                          value = "Certificate ID selector") AttributeSelector certificateID,
-                                  @QueryParam("classID") @DefaultValue(
-                                      value = "{ any: true }") @ApiParam(
-                                          name = "classID",
-                                          required = false,
-                                          defaultValue = "{ any: true }",
-                                          value = "Class ID selector") AttributeSelector classID,
-                                  @QueryParam("corpID") @DefaultValue(
-                                      value = "{ any: true }") @ApiParam(
-                                          name = "corpID",
-                                          required = false,
-                                          defaultValue = "{ any: true }",
-                                          value = "Corporation ID selector") AttributeSelector corpID,
+                                          value = "Certificate ID selector") AttributeSelector certID,
                                   @QueryParam("description") @DefaultValue(
                                       value = "{ any: true }") @ApiParam(
                                           name = "description",
                                           required = false,
                                           defaultValue = "{ any: true }",
-                                          value = "Description text selector") AttributeSelector description,
-                                  @QueryParam("grade") @DefaultValue(
-                                      value = "{ any: true }") @ApiParam(
-                                          name = "grade",
-                                          required = false,
-                                          defaultValue = "{ any: true }",
-                                          value = "Grade selector") AttributeSelector grade,
+                                          value = "Description selector") AttributeSelector description,
                                   @QueryParam("groupID") @DefaultValue(
                                       value = "{ any: true }") @ApiParam(
                                           name = "groupID",
                                           required = false,
                                           defaultValue = "{ any: true }",
                                           value = "Group ID selector") AttributeSelector groupID,
-                                  @QueryParam("iconID") @DefaultValue(
+                                  @QueryParam("name") @DefaultValue(
                                       value = "{ any: true }") @ApiParam(
-                                          name = "iconID",
+                                          name = "name",
                                           required = false,
                                           defaultValue = "{ any: true }",
-                                          value = "Icon ID selector") AttributeSelector iconID) {
-    ServiceUtil.sanitizeAttributeSelector(certificateID, classID, corpID, description, grade, groupID, iconID);
+                                          value = "Name selector") AttributeSelector name) {
+    ServiceUtil.sanitizeAttributeSelector(certID, description, groupID, name);
     maxresults = Math.min(1000, maxresults);
     try {
-      List<CrtCertificate> result = CrtCertificate.access(contid, maxresults, certificateID, classID, corpID, description, grade, groupID, iconID);
+      List<CrtCertificate> result = CrtCertificate.access(contid, maxresults, certID, description, groupID, name);
       return ServiceUtil.finish(result, request);
     } catch (NumberFormatException e) {
       ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
@@ -124,16 +105,16 @@ public class CrtWS {
     }
   }
 
-  @Path("/class")
+  @Path("/mastery")
   @GET
   @ApiOperation(
-      value = "Get certificate classes")
+      value = "Get certificate masteries")
   @ApiResponses(
       value = {
           @ApiResponse(
               code = 200,
-              message = "list of requested certificate classes",
-              response = CrtClass.class,
+              message = "list of requested certificate masteries",
+              response = CrtMastery.class,
               responseContainer = "array"),
           @ApiResponse(
               code = 400,
@@ -144,186 +125,113 @@ public class CrtWS {
               message = "internal service error",
               response = ServiceError.class),
       })
-  public Response getCertificateClasses(
-                                        @Context HttpServletRequest request,
-                                        @QueryParam("contid") @DefaultValue("-1") @ApiParam(
-                                            name = "contid",
-                                            required = false,
-                                            defaultValue = "-1",
-                                            value = "Continuation ID for paged results") int contid,
-                                        @QueryParam("maxresults") @DefaultValue("1000") @ApiParam(
-                                            name = "maxresults",
-                                            required = false,
-                                            defaultValue = "1000",
-                                            value = "Maximum number of results to retrieve") int maxresults,
-                                        @QueryParam("classID") @DefaultValue(
-                                            value = "{ any: true }") @ApiParam(
-                                                name = "classID",
-                                                required = false,
-                                                defaultValue = "{ any: true }",
-                                                value = "Class ID selector") AttributeSelector classID,
-                                        @QueryParam("className") @DefaultValue(
-                                            value = "{ any: true }") @ApiParam(
-                                                name = "className",
-                                                required = false,
-                                                defaultValue = "{ any: true }",
-                                                value = "Class name selector") AttributeSelector className,
-                                        @QueryParam("description") @DefaultValue(
-                                            value = "{ any: true }") @ApiParam(
-                                                name = "description",
-                                                required = false,
-                                                defaultValue = "{ any: true }",
-                                                value = "Description text selector") AttributeSelector description) {
-    ServiceUtil.sanitizeAttributeSelector(classID, className, description);
-    maxresults = Math.min(1000, maxresults);
-    try {
-      List<CrtClass> result = CrtClass.access(contid, maxresults, classID, className, description);
-      return ServiceUtil.finish(result, request);
-    } catch (NumberFormatException e) {
-      ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
-      return Response.status(Status.BAD_REQUEST).entity(errMsg).build();
-    }
-  }
-
-  @Path("/recommendation")
-  @GET
-  @ApiOperation(
-      value = "Get certificate recommendations")
-  @ApiResponses(
-      value = {
-          @ApiResponse(
-              code = 200,
-              message = "list of requested certificate recommendations",
-              response = CrtRecommendation.class,
-              responseContainer = "array"),
-          @ApiResponse(
-              code = 400,
-              message = "invalid attribute selector",
-              response = ServiceError.class),
-          @ApiResponse(
-              code = 500,
-              message = "internal service error",
-              response = ServiceError.class),
-      })
-  public Response getCertificateRecommendations(
-                                                @Context HttpServletRequest request,
-                                                @QueryParam("contid") @DefaultValue("-1") @ApiParam(
-                                                    name = "contid",
-                                                    required = false,
-                                                    defaultValue = "-1",
-                                                    value = "Continuation ID for paged results") int contid,
-                                                @QueryParam("maxresults") @DefaultValue("1000") @ApiParam(
-                                                    name = "maxresults",
-                                                    required = false,
-                                                    defaultValue = "1000",
-                                                    value = "Maximum number of results to retrieve") int maxresults,
-                                                @QueryParam("recommendationID") @DefaultValue(
-                                                    value = "{ any: true }") @ApiParam(
-                                                        name = "recommendationID",
-                                                        required = false,
-                                                        defaultValue = "{ any: true }",
-                                                        value = "Recommendation ID selector") AttributeSelector recommendationID,
-                                                @QueryParam("certificateID") @DefaultValue(
-                                                    value = "{ any: true }") @ApiParam(
-                                                        name = "certificateID",
-                                                        required = false,
-                                                        defaultValue = "{ any: true }",
-                                                        value = "Certificate ID selector") AttributeSelector certificateID,
-                                                @QueryParam("recommendationLevel") @DefaultValue(
-                                                    value = "{ any: true }") @ApiParam(
-                                                        name = "recommendationLevel",
-                                                        required = false,
-                                                        defaultValue = "{ any: true }",
-                                                        value = "Rcecommendation level selector") AttributeSelector recommendationLevel,
-                                                @QueryParam("shipTypeID") @DefaultValue(
-                                                    value = "{ any: true }") @ApiParam(
-                                                        name = "shipTypeID",
-                                                        required = false,
-                                                        defaultValue = "{ any: true }",
-                                                        value = "Ship type ID selector") AttributeSelector shipTypeID) {
-    ServiceUtil.sanitizeAttributeSelector(recommendationID, certificateID, recommendationLevel, shipTypeID);
-    maxresults = Math.min(1000, maxresults);
-    try {
-      List<CrtRecommendation> result = CrtRecommendation.access(contid, maxresults, recommendationID, certificateID, recommendationLevel, shipTypeID);
-      return ServiceUtil.finish(result, request);
-    } catch (NumberFormatException e) {
-      ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
-      return Response.status(Status.BAD_REQUEST).entity(errMsg).build();
-    }
-  }
-
-  @Path("/relationship")
-  @GET
-  @ApiOperation(
-      value = "Get certificate relationships")
-  @ApiResponses(
-      value = {
-          @ApiResponse(
-              code = 200,
-              message = "list of requested certificate relationships",
-              response = CrtRelationship.class,
-              responseContainer = "array"),
-          @ApiResponse(
-              code = 400,
-              message = "invalid attribute selector",
-              response = ServiceError.class),
-          @ApiResponse(
-              code = 500,
-              message = "internal service error",
-              response = ServiceError.class),
-      })
-  public Response getCertificateRelationships(
-                                              @Context HttpServletRequest request,
-                                              @QueryParam("contid") @DefaultValue("-1") @ApiParam(
-                                                  name = "contid",
+  public Response getCertificateMasteries(
+                                          @Context HttpServletRequest request,
+                                          @QueryParam("contid") @DefaultValue("-1") @ApiParam(
+                                              name = "contid",
+                                              required = false,
+                                              defaultValue = "-1",
+                                              value = "Continuation ID for paged results") int contid,
+                                          @QueryParam("maxresults") @DefaultValue("1000") @ApiParam(
+                                              name = "maxresults",
+                                              required = false,
+                                              defaultValue = "1000",
+                                              value = "Maximum number of results to retrieve") int maxresults,
+                                          @QueryParam("typeID") @DefaultValue(
+                                              value = "{ any: true }") @ApiParam(
+                                                  name = "typeID",
                                                   required = false,
-                                                  defaultValue = "-1",
-                                                  value = "Continuation ID for paged results") int contid,
-                                              @QueryParam("maxresults") @DefaultValue("1000") @ApiParam(
-                                                  name = "maxresults",
+                                                  defaultValue = "{ any: true }",
+                                                  value = "Type ID selector") AttributeSelector typeID,
+                                          @QueryParam("masteryLevel") @DefaultValue(
+                                              value = "{ any: true }") @ApiParam(
+                                                  name = "masteryLevel",
                                                   required = false,
-                                                  defaultValue = "1000",
-                                                  value = "Maximum number of results to retrieve") int maxresults,
-                                              @QueryParam("relationshipID") @DefaultValue(
-                                                  value = "{ any: true }") @ApiParam(
-                                                      name = "relationshipID",
-                                                      required = false,
-                                                      defaultValue = "{ any: true }",
-                                                      value = "Relationship ID selector") AttributeSelector relationshipID,
-                                              @QueryParam("childID") @DefaultValue(
-                                                  value = "{ any: true }") @ApiParam(
-                                                      name = "childID",
-                                                      required = false,
-                                                      defaultValue = "{ any: true }",
-                                                      value = "Child ID selector") AttributeSelector childID,
-                                              @QueryParam("grade") @DefaultValue(
-                                                  value = "{ any: true }") @ApiParam(
-                                                      name = "grade",
-                                                      required = false,
-                                                      defaultValue = "{ any: true }",
-                                                      value = "Grade selector") AttributeSelector grade,
-                                              @QueryParam("parentID") @DefaultValue(
-                                                  value = "{ any: true }") @ApiParam(
-                                                      name = "parentID",
-                                                      required = false,
-                                                      defaultValue = "{ any: true }",
-                                                      value = "Parent ID selector") AttributeSelector parentID,
-                                              @QueryParam("parentLevel") @DefaultValue(
-                                                  value = "{ any: true }") @ApiParam(
-                                                      name = "parentLevel",
-                                                      required = false,
-                                                      defaultValue = "{ any: true }",
-                                                      value = "Parent level selector") AttributeSelector parentLevel,
-                                              @QueryParam("parentTypeID") @DefaultValue(
-                                                  value = "{ any: true }") @ApiParam(
-                                                      name = "parentTypeID",
-                                                      required = false,
-                                                      defaultValue = "{ any: true }",
-                                                      value = "Parent type ID selector") AttributeSelector parentTypeID) {
-    ServiceUtil.sanitizeAttributeSelector(relationshipID, childID, grade, parentID, parentLevel, parentTypeID);
+                                                  defaultValue = "{ any: true }",
+                                                  value = "Mastery level selector") AttributeSelector masteryLevel,
+                                          @QueryParam("certID") @DefaultValue(
+                                              value = "{ any: true }") @ApiParam(
+                                                  name = "certID",
+                                                  required = false,
+                                                  defaultValue = "{ any: true }",
+                                                  value = "Certificate ID selector") AttributeSelector certID) {
+    ServiceUtil.sanitizeAttributeSelector(typeID, masteryLevel, certID);
     maxresults = Math.min(1000, maxresults);
     try {
-      List<CrtRelationship> result = CrtRelationship.access(contid, maxresults, relationshipID, childID, grade, parentID, parentLevel, parentTypeID);
+      List<CrtMastery> result = CrtMastery.access(contid, maxresults, typeID, masteryLevel, certID);
+      return ServiceUtil.finish(result, request);
+    } catch (NumberFormatException e) {
+      ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
+      return Response.status(Status.BAD_REQUEST).entity(errMsg).build();
+    }
+  }
+
+  @Path("/skill")
+  @GET
+  @ApiOperation(
+      value = "Get certificate skills")
+  @ApiResponses(
+      value = {
+          @ApiResponse(
+              code = 200,
+              message = "list of requested certificate skills",
+              response = CrtSkill.class,
+              responseContainer = "array"),
+          @ApiResponse(
+              code = 400,
+              message = "invalid attribute selector",
+              response = ServiceError.class),
+          @ApiResponse(
+              code = 500,
+              message = "internal service error",
+              response = ServiceError.class),
+      })
+  public Response getCertificateSkills(
+                                       @Context HttpServletRequest request,
+                                       @QueryParam("contid") @DefaultValue("-1") @ApiParam(
+                                           name = "contid",
+                                           required = false,
+                                           defaultValue = "-1",
+                                           value = "Continuation ID for paged results") int contid,
+                                       @QueryParam("maxresults") @DefaultValue("1000") @ApiParam(
+                                           name = "maxresults",
+                                           required = false,
+                                           defaultValue = "1000",
+                                           value = "Maximum number of results to retrieve") int maxresults,
+                                       @QueryParam("certID") @DefaultValue(
+                                           value = "{ any: true }") @ApiParam(
+                                               name = "certID",
+                                               required = false,
+                                               defaultValue = "{ any: true }",
+                                               value = "Certificated ID selector") AttributeSelector certID,
+                                       @QueryParam("skillID") @DefaultValue(
+                                           value = "{ any: true }") @ApiParam(
+                                               name = "skillID",
+                                               required = false,
+                                               defaultValue = "{ any: true }",
+                                               value = "Skill ID selector") AttributeSelector skillID,
+                                       @QueryParam("certLevelInt") @DefaultValue(
+                                           value = "{ any: true }") @ApiParam(
+                                               name = "certLevelInt",
+                                               required = false,
+                                               defaultValue = "{ any: true }",
+                                               value = "Certificate level integer selector") AttributeSelector certLevelInt,
+                                       @QueryParam("skillLevel") @DefaultValue(
+                                           value = "{ any: true }") @ApiParam(
+                                               name = "skillLevel",
+                                               required = false,
+                                               defaultValue = "{ any: true }",
+                                               value = "Skill level selector") AttributeSelector skillLevel,
+                                       @QueryParam("certLevelText") @DefaultValue(
+                                           value = "{ any: true }") @ApiParam(
+                                               name = "certLevelText",
+                                               required = false,
+                                               defaultValue = "{ any: true }",
+                                               value = "Certificate level text selector") AttributeSelector certLevelText) {
+    ServiceUtil.sanitizeAttributeSelector(certID, skillID, certLevelInt, skillLevel, certLevelText);
+    maxresults = Math.min(1000, maxresults);
+    try {
+      List<CrtSkill> result = CrtSkill.access(contid, maxresults, certID, skillID, certLevelInt, skillLevel, certLevelText);
       return ServiceUtil.finish(result, request);
     } catch (NumberFormatException e) {
       ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");

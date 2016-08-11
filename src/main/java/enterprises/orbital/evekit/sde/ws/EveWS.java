@@ -76,72 +76,40 @@ public class EveWS {
                                       required = false,
                                       defaultValue = "{ any: true }",
                                       value = "Graphic ID selector") AttributeSelector graphicID,
-                              @QueryParam("collidable") @DefaultValue(
+                              @QueryParam("sofFactionName") @DefaultValue(
                                   value = "{ any: true }") @ApiParam(
-                                      name = "collidable",
+                                      name = "sofFactionName",
                                       required = false,
                                       defaultValue = "{ any: true }",
-                                      value = "Collidable flag selector") AttributeSelector collidable,
-                              @QueryParam("colorScheme") @DefaultValue(
-                                  value = "{ any: true }") @ApiParam(
-                                      name = "colorScheme",
-                                      required = false,
-                                      defaultValue = "{ any: true }",
-                                      value = "Color scheme selector") AttributeSelector colorScheme,
-                              @QueryParam("description") @DefaultValue(
-                                  value = "{ any: true }") @ApiParam(
-                                      name = "description",
-                                      required = false,
-                                      defaultValue = "{ any: true }",
-                                      value = "Description text selector") AttributeSelector description,
-                              @QueryParam("directoryID") @DefaultValue(
-                                  value = "{ any: true }") @ApiParam(
-                                      name = "directoryID",
-                                      required = false,
-                                      defaultValue = "{ any: true }",
-                                      value = "Directory ID selector") AttributeSelector directoryID,
-                              @QueryParam("gfxRaceID") @DefaultValue(
-                                  value = "{ any: true }") @ApiParam(
-                                      name = "gfxRaceID",
-                                      required = false,
-                                      defaultValue = "{ any: true }",
-                                      value = "GFX race ID selector") AttributeSelector gfxRaceID,
+                                      value = "Faction name selector") AttributeSelector sofFactionName,
                               @QueryParam("graphicFile") @DefaultValue(
                                   value = "{ any: true }") @ApiParam(
                                       name = "graphicFile",
                                       required = false,
                                       defaultValue = "{ any: true }",
                                       value = "Graphic file selector") AttributeSelector graphicFile,
-                              @QueryParam("graphicName") @DefaultValue(
-                                  value = "{ any: true }") @ApiParam(
-                                      name = "graphicName",
-                                      required = false,
-                                      defaultValue = "{ any: true }",
-                                      value = "Graphic name selector") AttributeSelector graphicName,
-                              @QueryParam("graphicType") @DefaultValue(
-                                  value = "{ any: true }") @ApiParam(
-                                      name = "graphicType",
-                                      required = false,
-                                      defaultValue = "{ any: true }",
-                                      value = "Graphic type selector") AttributeSelector graphicType,
-                              @QueryParam("obsolete") @DefaultValue(
-                                  value = "{ any: true }") @ApiParam(
-                                      name = "obsolete",
-                                      required = false,
-                                      defaultValue = "{ any: true }",
-                                      value = "Obsolete flag selector") AttributeSelector obsolete,
                               @QueryParam("sofHullName") @DefaultValue(
                                   value = "{ any: true }") @ApiParam(
                                       name = "sofHullName",
                                       required = false,
                                       defaultValue = "{ any: true }",
-                                      value = "SOF hull name selector") AttributeSelector sofHullName) {
-    ServiceUtil.sanitizeAttributeSelector(graphicID, collidable, colorScheme, description, directoryID, gfxRaceID, graphicFile, graphicName, graphicType,
-                                          obsolete, sofHullName);
+                                      value = "Hull name selector") AttributeSelector sofHullName,
+                              @QueryParam("sofRaceName") @DefaultValue(
+                                  value = "{ any: true }") @ApiParam(
+                                      name = "sofRaceName",
+                                      required = false,
+                                      defaultValue = "{ any: true }",
+                                      value = "Race name selector") AttributeSelector sofRaceName,
+                              @QueryParam("description") @DefaultValue(
+                                  value = "{ any: true }") @ApiParam(
+                                      name = "description",
+                                      required = false,
+                                      defaultValue = "{ any: true }",
+                                      value = "Description selector") AttributeSelector description) {
+    ServiceUtil.sanitizeAttributeSelector(graphicID, sofFactionName, graphicFile, sofHullName, sofRaceName, description);
     maxresults = Math.min(1000, maxresults);
     try {
-      List<EveGraphic> result = EveGraphic.access(contid, maxresults, graphicID, collidable, colorScheme, description, directoryID, gfxRaceID, graphicFile,
-                                                  graphicName, graphicType, obsolete, sofHullName);
+      List<EveGraphic> result = EveGraphic.access(contid, maxresults, graphicID, sofFactionName, graphicFile, sofHullName, sofRaceName, description);
       return ServiceUtil.finish(result, request);
     } catch (NumberFormatException e) {
       ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
