@@ -1034,12 +1034,6 @@ public class InvWS {
                                    required = false,
                                    defaultValue = "{ any: true }",
                                    value = "Race ID selector") AttributeSelector raceID,
-                           @QueryParam("radius") @DefaultValue(
-                               value = "{ any: true }") @ApiParam(
-                                   name = "radius",
-                                   required = false,
-                                   defaultValue = "{ any: true }",
-                                   value = "Radius selector") AttributeSelector radius,
                            @QueryParam("soundID") @DefaultValue(
                                value = "{ any: true }") @ApiParam(
                                    name = "soundID",
@@ -1059,11 +1053,11 @@ public class InvWS {
                                    defaultValue = "{ any: true }",
                                    value = "Volume selector") AttributeSelector volume) {
     ServiceUtil.sanitizeAttributeSelector(typeID, basePrice, capacity, chanceOfDuplicating, description, graphicID, groupID, iconID, marketGroupID, mass,
-                                          portionSize, published, raceID, radius, soundID, typeName, volume);
+                                          portionSize, published, raceID, soundID, typeName, volume);
     maxresults = Math.min(1000, maxresults);
     try {
       List<InvType> result = InvType.access(contid, maxresults, typeID, basePrice, capacity, chanceOfDuplicating, description, graphicID, groupID, iconID,
-                                            marketGroupID, mass, portionSize, published, raceID, radius, soundID, typeName, volume);
+                                            marketGroupID, mass, portionSize, published, raceID, soundID, typeName, volume);
       return ServiceUtil.finish(result, request);
     } catch (NumberFormatException e) {
       ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
