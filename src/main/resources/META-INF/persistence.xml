@@ -124,6 +124,8 @@
       <property name="javax.persistence.jdbc.user" value="${enterprises.orbital.evekit.sde.jdbc.user}"/>
       <property name="javax.persistence.jdbc.password" value="${enterprises.orbital.evekit.sde.jdbc.password}"/>
       <property name="hibernate.dialect" value="${enterprises.orbital.evekit.sde.jdbc.dialect_class}"/>
+      <!-- Attempt to fix DB connection timeout issue -->
+      <property name="hibernate.connection.release_mode" value="after_transaction" />
       <property name="hibernate.show_sql" value="false" />
       <property name="hibernate.format_sql" value="false" />
       <property name="hibernate.c3p0.min_size" value="5"/>
