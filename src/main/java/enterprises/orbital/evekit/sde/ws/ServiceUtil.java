@@ -22,7 +22,8 @@ public class ServiceUtil {
   private static final Logger                    log                     = Logger.getLogger(ServiceUtil.class.getName());
   private static final String                    sdeString               = OrbitalProperties.getGlobalProperty("enterprises.orbital.evekit.sde.version",
                                                                                                                "DEBUG");
-  public static final long                       DEFAULT_EXPIRY_INTERVAL = TimeUnit.MILLISECONDS.convert(24, TimeUnit.HOURS);
+  public static final long                       DEFAULT_EXPIRY_INTERVAL = OrbitalProperties
+      .getLongGlobalProperty("enterprises.orbital.evekit.sde.expiry", TimeUnit.MILLISECONDS.convert(24, TimeUnit.HOURS));
   protected static final ThreadLocal<DateFormat> dateFormat              = OrbitalProperties.dateFormatFactory(new OrbitalProperties.DateFormatGenerator() {
 
                                                                            @Override
