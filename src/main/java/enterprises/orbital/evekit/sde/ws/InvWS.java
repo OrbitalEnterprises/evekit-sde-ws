@@ -30,6 +30,7 @@ import enterprises.orbital.evekit.sde.inv.InvType;
 import enterprises.orbital.evekit.sde.inv.InvTypeMaterial;
 import enterprises.orbital.evekit.sde.inv.InvTypeReaction;
 import enterprises.orbital.evekit.sde.inv.InvUniqueName;
+import enterprises.orbital.evekit.sde.inv.InvVolume;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -1247,6 +1248,61 @@ public class InvWS {
     maxresults = Math.min(1000, maxresults);
     try {
       List<InvUniqueName> result = InvUniqueName.access(contid, maxresults, itemID, groupID, itemName);
+      return ServiceUtil.finish(result, request);
+    } catch (NumberFormatException e) {
+      ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
+      return Response.status(Status.BAD_REQUEST).entity(errMsg).build();
+    }
+  }
+
+  @Path("/volume")
+  @GET
+  @ApiOperation(
+      value = "Get type volumes")
+  @ApiResponses(
+      value = {
+          @ApiResponse(
+              code = 200,
+              message = "list of requested type volumes",
+              response = InvVolume.class,
+              responseContainer = "array"),
+          @ApiResponse(
+              code = 400,
+              message = "invalid attribute selector",
+              response = ServiceError.class),
+          @ApiResponse(
+              code = 500,
+              message = "internal service error",
+              response = ServiceError.class),
+      })
+  public Response getVolumes(
+                             @Context HttpServletRequest request,
+                             @QueryParam("contid") @DefaultValue("-1") @ApiParam(
+                                 name = "contid",
+                                 required = false,
+                                 defaultValue = "-1",
+                                 value = "Continuation ID for paged results") int contid,
+                             @QueryParam("maxresults") @DefaultValue("1000") @ApiParam(
+                                 name = "maxresults",
+                                 required = false,
+                                 defaultValue = "1000",
+                                 value = "Maximum number of results to retrieve") int maxresults,
+                             @QueryParam("typeID") @DefaultValue(
+                                 value = "{ any: true }") @ApiParam(
+                                     name = "typeID",
+                                     required = false,
+                                     defaultValue = "{ any: true }",
+                                     value = "Type ID selector") AttributeSelector typeID,
+                             @QueryParam("volume") @DefaultValue(
+                                 value = "{ any: true }") @ApiParam(
+                                     name = "volume",
+                                     required = false,
+                                     defaultValue = "{ any: true }",
+                                     value = "Volume selector") AttributeSelector volume) {
+    ServiceUtil.sanitizeAttributeSelector(typeID, volume);
+    maxresults = Math.min(1000, maxresults);
+    try {
+      List<InvVolume> result = InvVolume.access(contid, maxresults, typeID, volume);
       return ServiceUtil.finish(result, request);
     } catch (NumberFormatException e) {
       ServiceError errMsg = new ServiceError(Status.BAD_REQUEST.getStatusCode(), "An attribute selector contained an illegal value");
