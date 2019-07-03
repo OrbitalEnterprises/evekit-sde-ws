@@ -7,7 +7,7 @@
   </parent>
   <groupId>enterprises.orbital.evekit</groupId>
   <artifactId>sde.ws</artifactId>
-  <version>2.0.0.20190529</version>
+  <version>2.0.0.20190625</version>
   <packaging>war</packaging>
   <name>EveKit SDE Web Service</name>
   <description>Web service which exposes EVE Online SDE export</description>
@@ -16,13 +16,13 @@
   	<url>https://github.com/OrbitalEnterprises/evekit-sde-ws</url>
   	<connection>scm:git:https://github.com/OrbitalEnterprises/evekit-sde-ws.git</connection>
   	<developerConnection>scm:git:git@github.com:OrbitalEnterprises/evekit-sde-ws.git</developerConnection>
-  	<tag>20190529</tag>
+  	<tag>20190625</tag>
   </scm>
   
   <properties>
     <enterprises.orbital.evekit.sde.ws.appname>evekit-sde</enterprises.orbital.evekit.sde.ws.appname>
-    <enterprises.orbital.evekit.sde.release>20190529</enterprises.orbital.evekit.sde.release>
-    <evekit.sde.version>2.0.0.20190529</evekit.sde.version>
+    <enterprises.orbital.evekit.sde.release>20190625</enterprises.orbital.evekit.sde.release>
+    <evekit.sde.version>2.0.0.20190625</evekit.sde.version>
     <servlet.version>3.1.0</servlet.version>
     <swagger.version>1.5.7</swagger.version>
     <mysql.connector.version>5.1.38</mysql.connector.version>
